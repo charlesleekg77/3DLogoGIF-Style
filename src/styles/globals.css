@@ -1,0 +1,232 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/*
+ * Design system — dark, high-contrast, neon-accented.
+ *
+ * Layering model (bottom to top):
+ *   1. --void base colour, painted on <html> so overscroll never flashes white.
+ *   2. A fixed geometric grid overlay, faded at the edges with a radial mask.
+ *   3. A violet radial bloom behind the hero.
+ *   4. Content.
+ */
+
+@layer base {
+  :root {
+    --void: #0a0a0c;
+    --void-deep: #060607;
+    --surface: #121216;
+    --surface-raised: #1c1c22;
+    --border: rgba(255, 255, 255, 0.08);
+    --border-strong: rgba(255, 255, 255, 0.16);
+    --text: #f5f5f7;
+    --text-muted: #a1a1aa;
+    --text-faint: #6f6f7a;
+    --neon-violet: #7c5cff;
+    --neon-cyan: #22d3ee;
+    --neon-lime: #a3e635;
+    --neon-pink: #f472b6;
+    --neon-amber: #fbbf24;
+
+    --hud-blur: 24px;
+    color-scheme: dark;
+  }
+
+  html {
+    background-color: var(--void);
+    -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
+    scroll-behavior: smooth;
+  }
+
+  /* Lenis drives scrolling; native smooth scrolling would fight it. */
+  html.lenis,
+  html.lenis body {
+    height: auto;
+    scroll-behavior: auto;
+  }
+  .lenis.lenis-smooth {
+    scroll-behavior: auto !important;
+  }
+  .lenis.lenis-stopped {
+    overflow: hidden;
+  }
+
+  body {
+    @apply bg-void text-void-50 font-sans antialiased;
+    overflow-x: hidden;
+  }
+
+  ::selection {
+    background: rgba(124, 92, 255, 0.35);
+    color: #fff;
+  }
+
+  /* Focus ring: visible on keyboard, invisible on pointer. */
+  :focus-visible {
+    outline: 2px solid var(--neon-cyan);
+    outline-offset: 2px;
+    border-radius: 4px;
+  }
+
+  /* Custom scrollbar, tuned for a dark surface. */
+  ::-webkit-scrollbar {
+    width: 10px;
+    height: 10px;
+  }
+  ::-webkit-scrollbar-track {
+    background: var(--void-deep);
+  }
+  ::-webkit-scrollbar-thumb {
+    background: #2e2e36;
+    border-radius: 999px;
+    border: 2px solid var(--void-deep);
+  }
+  ::-webkit-scrollbar-thumb:hover {
+    background: #4a4a54;
+  }
+}
+
+@layer components {
+  /* --- Geometric grid overlay ------------------------------------------- */
+  .grid-overlay {
+    @apply pointer-events-none fixed inset-0 -z-10 bg-grid-overlay bg-grid;
+    /* Fade the grid out toward the edges so it reads as texture, not a table. */
+    -webkit-mask-image: radial-gradient(120% 90% at 50% 20%, #000 0%, transparent 78%);
+    mask-image: radial-gradient(120% 90% at 50% 20%, #000 0%, transparent 78%);
+  }
+
+  .radial-bloom {
+    @apply pointer-events-none fixed inset-0 -z-10 bg-radial-fade;
+  }
+
+  /* --- Glassmorphism HUD ------------------------------------------------ */
+  .glass {
+    background: linear-gradient(
+      180deg,
+      rgba(28, 28, 34, 0.72) 0%,
+      rgba(18, 18, 22, 0.66) 100%
+    );
+    backdrop-filter: blur(var(--hud-blur)) saturate(140%);
+    -webkit-backdrop-filter: blur(var(--hud-blur)) saturate(140%);
+    border: 1px solid var(--border);
+    box-shadow:
+      0 1px 0 0 rgba(255, 255, 255, 0.05) inset,
+      0 24px 64px -24px rgba(0, 0, 0, 0.85);
+  }
+
+  .glass-strong {
+    background: linear-gradient(
+      180deg,
+      rgba(20, 20, 25, 0.94) 0%,
+      rgba(12, 12, 15, 0.92) 100%
+    );
+    backdrop-filter: blur(32px) saturate(150%);
+    -webkit-backdrop-filter: blur(32px) saturate(150%);
+    border: 1px solid var(--border-strong);
+  }
+
+  /* Hairline divider that reads on dark surfaces without a hard border. */
+  .hairline {
+    @apply h-px w-full bg-gradient-to-r from-transparent via-white/10 to-transparent;
+  }
+
+  /* --- Neon button ------------------------------------------------------ */
+  .btn-neon {
+    @apply relative inline-flex items-center justify-center gap-2 rounded-full px-5 py-2.5
+           text-sm font-medium tracking-tight transition-all duration-200
+           disabled:cursor-not-allowed disabled:opacity-40;
+    background: linear-gradient(135deg, #7c5cff 0%, #22d3ee 140%);
+    color: #08080a;
+    box-shadow: 0 0 0 1px rgba(255, 255, 255, 0.12) inset;
+  }
+  .btn-neon:hover:not(:disabled) {
+    box-shadow:
+      0 0 0 1px rgba(255, 255, 255, 0.2) inset,
+      0 0 28px -4px rgba(124, 92, 255, 0.75);
+    transform: translateY(-1px);
+  }
+  .btn-neon:active:not(:disabled) {
+    transform: translateY(0);
+  }
+
+  .btn-ghost {
+    @apply inline-flex items-center justify-center gap-2 rounded-full border border-white/10
+           bg-white/[0.03] px-5 py-2.5 text-sm font-medium text-void-100
+           transition-all duration-200 hover:border-white/20 hover:bg-white/[0.07]
+           disabled:cursor-not-allowed disabled:opacity-40;
+  }
+
+  /* --- Metadata / stat chip -------------------------------------------- */
+  .stat-chip {
+    @apply inline-flex items-baseline gap-1.5 rounded-md border border-white/[0.07]
+           bg-white/[0.03] px-2 py-1 font-mono text-[10px] uppercase tracking-widest
+           text-void-300;
+  }
+
+  .stat-value {
+    @apply font-mono text-[11px] tabular-nums text-void-50;
+  }
+
+  /* --- Range slider ----------------------------------------------------- */
+  .hud-slider {
+    @apply h-1 w-full cursor-pointer appearance-none rounded-full bg-white/10;
+    background-image: linear-gradient(90deg, var(--neon-violet), var(--neon-cyan));
+    background-repeat: no-repeat;
+    background-size: var(--fill, 0%) 100%;
+  }
+  .hud-slider::-webkit-slider-thumb {
+    @apply h-3.5 w-3.5 appearance-none rounded-full border border-white/40 bg-white;
+    box-shadow: 0 0 12px -1px rgba(124, 92, 255, 0.9);
+    transition: transform 120ms ease;
+  }
+  .hud-slider::-webkit-slider-thumb:hover {
+    transform: scale(1.15);
+  }
+  .hud-slider::-moz-range-thumb {
+    @apply h-3.5 w-3.5 rounded-full border border-white/40 bg-white;
+    box-shadow: 0 0 12px -1px rgba(124, 92, 255, 0.9);
+  }
+  .hud-slider::-moz-range-track {
+    @apply h-1 rounded-full bg-white/10;
+  }
+
+  /* --- Section eyebrow -------------------------------------------------- */
+  .eyebrow {
+    @apply font-mono text-[11px] uppercase tracking-[0.28em] text-neon-cyan/80;
+  }
+
+  /* --- Marquee track ---------------------------------------------------- */
+  .marquee-track {
+    @apply flex w-max animate-marquee gap-8;
+  }
+}
+
+@layer utilities {
+  .text-balance {
+    text-wrap: balance;
+  }
+  .text-pretty {
+    text-wrap: pretty;
+  }
+  /* Hide scrollbars on horizontal chip rails while keeping scrollability. */
+  .no-scrollbar::-webkit-scrollbar {
+    display: none;
+  }
+  .no-scrollbar {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+  }
+}
+
+/* Respect users who ask for less motion: kill the decorative loops. */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}

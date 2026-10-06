@@ -1,0 +1,44 @@
+{
+  "name": "3dlogogif-studio",
+  "version": "1.0.0",
+  "private": true,
+  "description": "3DLogoGIF-style platform: interactive WebGL 3D logo studio with client-side GIF/MP4 export, showcase gallery and instant ordering.",
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start",
+    "lint": "next lint",
+    "typecheck": "tsc --noEmit",
+    "prepare-assets": "node scripts/copy-worker.mjs",
+    "postinstall": "node scripts/copy-worker.mjs"
+  },
+  "dependencies": {
+    "@react-three/drei": "^10.7.9",
+    "@react-three/fiber": "^9.8.1",
+    "@stripe/stripe-js": "^4.8.0",
+    "clsx": "^2.1.1",
+    "gif.js": "^0.2.0",
+    "gsap": "^3.12.5",
+    "lenis": "^1.1.14",
+    "mp4-muxer": "^5.1.3",
+    "next": "^15.0.3",
+    "react": "^19.3.0",
+    "react-dom": "^19.3.0",
+    "stripe": "^17.4.0",
+    "tailwind-merge": "^2.5.4",
+    "three": "^0.169.0",
+    "zustand": "^5.0.1"
+  },
+  "devDependencies": {
+    "@types/node": "^22.9.0",
+    "@types/react": "^19.3.0",
+    "@types/react-dom": "^19.3.0",
+    "@types/three": "^0.169.0",
+    "autoprefixer": "^10.4.20",
+    "eslint": "^8.57.1",
+    "eslint-config-next": "^15.5.27",
+    "postcss": "^8.4.49",
+    "tailwindcss": "^3.4.14",
+    "typescript": "^5.6.3"
+  }
+}

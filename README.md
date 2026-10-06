@@ -6,6 +6,10 @@ GIF, MP4, or animated WebP — rendered on the visitor's GPU, not in an upload q
 
 Built with Next.js 15 (App Router), React 19, TypeScript, React Three Fiber, and Tailwind.
 
+Deeper documents: [`docs/ARCHITECTURE.md`](docs/ARCHITECTURE.md),
+[`docs/UI_UX_SPEC.md`](docs/UI_UX_SPEC.md),
+[`docs/TECHNICAL_BLUEPRINT.md`](docs/TECHNICAL_BLUEPRINT.md).
+
 ---
 
 ## 1. Architecture
